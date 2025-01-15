@@ -7,6 +7,12 @@ interface WeatherData {
         temperature_2m: number;
         weather_code: number;
     }
+    daily: {
+        temperature_2m_max: number[]
+        temperature_2m_min: number[]
+        weather_code: number[]
+        time: string[]
+    }
 }
 
 const weatherCodeDescriptions: { [key: number]: string } = {
@@ -40,6 +46,8 @@ const weatherCodeDescriptions: { [key: number]: string } = {
     99: 'Thunderstorm with heavy hail'
 }
 
+const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
 export default function Weather() {
     const [weatherData, setWeatherData] = useState<WeatherData | null>(null)
     const [latitude, setLatitude] = useState<number | null>(null);
@@ -70,12 +78,28 @@ export default function Weather() {
         <>
             <Geo onGeoData={handleGeoData}/>
 
-            <div className="flex justify-center items-center">
+            <div className="flex flex-col justify-center items-center">
                 {weatherData ? (
+                    <>
                     <div>
                         <h1 className="text-[4rem]">{weatherData.current.temperature_2m}°C</h1>
                         <h2 className="text-[1rem]">{weatherCodeDescriptions[weatherData.current.weather_code]}</h2>
                     </div>
+
+                    <ul className="flex gap-[1rem] mt-[3rem]">
+                        {weatherData.daily.time.map((time, index) => {
+                            const day = new Date(time).getDay()
+                            return (
+                                <li key={index} className="border rounded-[1rem] p-[2rem]">
+                                    <p>{weekdays[day]}</p>
+                                    <p>{weatherCodeDescriptions[weatherData.daily.weather_code[index]]}</p>
+                                    <p>Max: {weatherData.daily.temperature_2m_max[index]}°C</p>
+                                    <p>Min: {weatherData.daily.temperature_2m_min[index]}°C</p>
+                                </li>
+                            )
+                        })}
+                    </ul>
+                    </>
                 ) : (
                     <p>Loading...</p>
                 )}

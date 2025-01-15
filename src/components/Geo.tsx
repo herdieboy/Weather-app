@@ -40,7 +40,7 @@ export default function Geo({ onGeoData} : GeoProps) {
 
     return (
         <div className="absolute top-0 mt-[1rem]">
-            <input className="border rounded-l-full px-[1rem] py-[0.5rem] bg-blue-600" type="text" value={city} onChange={(event) => setCity(event.target.value)} />
+            <input className="border rounded-l-full px-[1rem] py-[0.5rem] bg-blue-500" type="text" value={city} onChange={(event) => setCity(event.target.value)} />
             <button className="border rounded-r-full px-[1rem] py-[0.5rem] ml-1" onClick={fetchData}>Search</button>
 
             {error && <p style={{ color: 'red' }}>{error}</p>}
