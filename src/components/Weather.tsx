@@ -102,7 +102,7 @@ export default function Weather() {
                                     <p>{weekdays[day]}</p>
                                     <img className="w-[2rem]" src={weatherCodeIcons[weatherData.daily.weather_code[index]]}></img>
                                     <p>{Math.round(weatherData.daily.temperature_2m_max[index])}°C</p>
-                                    <p>{Math.round(weatherData.daily.temperature_2m_min[index])}°C</p>
+                                    <p className="text-gray-300">{Math.round(weatherData.daily.temperature_2m_min[index])}°C</p>
                                 </li>
                             )
                         })}
