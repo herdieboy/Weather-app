@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 
 interface GeoData {
@@ -38,10 +38,14 @@ export default function Geo({ onGeoData} : GeoProps) {
             })
     }
 
+    useEffect(() => {
+        fetchData()
+    }, [])
+
     return (
-        <div className="absolute top-0 mt-[1rem]">
-            <input className="border rounded-l-full px-[1rem] py-[0.5rem] bg-blue-500" type="text" value={city} onChange={(event) => setCity(event.target.value)} />
-            <button className="border rounded-r-full px-[1rem] py-[0.5rem] ml-1" onClick={fetchData}>Search</button>
+        <div className="w-full flex flex-col">
+            <input className="border rounded-full px-[1rem] py-[0.25rem] mb-[0.5rem] bg-transparent" type="text" value={city} onChange={(event) => setCity(event.target.value)} />
+            <button className="border rounded-full px-[1rem] py-[0.25rem] mb-[1rem] ml-[-1px]" onClick={fetchData}>Search</button>
 
             {error && <p style={{ color: 'red' }}>{error}</p>}
 

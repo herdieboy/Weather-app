@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import Geo from './Geo';
+import Geo from './Geo'
+
+import drizzle from '../assets/icons/cloud-drizzle.svg'
+import lightning from '../assets/icons/cloud-lightning.svg'
+import rain from '../assets/icons/cloud-rain.svg'
+import snow from '../assets/icons/cloud-snow.svg'
+import cloud from '../assets/icons/cloud.svg'
+import sun from '../assets/icons/sun.svg'
+
 
 interface WeatherData {
     current: {
@@ -15,38 +23,38 @@ interface WeatherData {
     }
 }
 
-const weatherCodeDescriptions: { [key: number]: string } = {
-    0: 'Clear sky',
-    1: 'Mainly clear',
-    2: 'Partly cloudy',
-    3: 'Overcast',
-    45: 'Fog',
-    48: 'Depositing rime fog',
-    51: 'Drizzle: Light',
-    53: 'Drizzle: Moderate',
-    55: 'Drizzle: Dense intensity',
-    56: 'Freezing Drizzle: Light',
-    57: 'Freezing Drizzle: Dense intensity',
-    61: 'Rain: Slight',
-    63: 'Rain: Moderate',
-    65: 'Rain: Heavy intensity',
-    66: 'Freezing Rain: Light',
-    67: 'Freezing Rain: Heavy intensity',
-    71: 'Snow fall: Slight',
-    73: 'Snow fall: Moderate',
-    75: 'Snow fall: Heavy intensity',
-    77: 'Snow grains',
-    80: 'Rain showers: Slight',
-    81: 'Rain showers: Moderate',
-    82: 'Rain showers: Violent',
-    85: 'Snow showers: Slight',
-    86: 'Snow showers: Heavy',
-    95: 'Thunderstorm: Slight or moderate',
-    96: 'Thunderstorm with slight hail',
-    99: 'Thunderstorm with heavy hail'
+const weatherCodeIcons: { [key: number]: string } = {
+    0: sun,
+    1: sun,
+    2: sun,
+    3: cloud,
+    45: cloud,
+    48: cloud,
+    51: drizzle,
+    53: drizzle,
+    55: drizzle,
+    56: drizzle,
+    57: drizzle,
+    61: rain,
+    63: rain,
+    65: rain,
+    66: rain,
+    67: rain,
+    71: snow,
+    73: snow,
+    75: snow,
+    77: snow,
+    80: rain,
+    81: rain,
+    82: rain,
+    85: snow,
+    86: snow,
+    95: lightning,
+    96: lightning,
+    99: lightning
 }
 
-const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+const weekdays = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 
 export default function Weather() {
     const [weatherData, setWeatherData] = useState<WeatherData | null>(null)
@@ -78,23 +86,23 @@ export default function Weather() {
         <>
             <Geo onGeoData={handleGeoData}/>
 
-            <div className="flex flex-col justify-center items-center">
+            <div className="flex flex-col justify-center items-center mt-[4rem]">
                 {weatherData ? (
                     <>
-                    <div>
-                        <h1 className="text-[4rem]">{weatherData.current.temperature_2m}°C</h1>
-                        <h2 className="text-[1rem]">{weatherCodeDescriptions[weatherData.current.weather_code]}</h2>
+                    <div className="flex flex-col items-center">
+                        <img className="text-[1rem]" src={weatherCodeIcons[weatherData.current.weather_code]}></img>
+                        <h1 className="text-[4rem]">{Math.round(weatherData.current.temperature_2m)}°C</h1>
                     </div>
 
                     <ul className="flex gap-[1rem] mt-[3rem]">
                         {weatherData.daily.time.map((time, index) => {
                             const day = new Date(time).getDay()
                             return (
-                                <li key={index} className="border rounded-[1rem] p-[2rem]">
+                                <li key={index} className="flex flex-col items-center">
                                     <p>{weekdays[day]}</p>
-                                    <p>{weatherCodeDescriptions[weatherData.daily.weather_code[index]]}</p>
-                                    <p>Max: {weatherData.daily.temperature_2m_max[index]}°C</p>
-                                    <p>Min: {weatherData.daily.temperature_2m_min[index]}°C</p>
+                                    <img className="w-[2rem]" src={weatherCodeIcons[weatherData.daily.weather_code[index]]}></img>
+                                    <p>{Math.round(weatherData.daily.temperature_2m_max[index])}°C</p>
+                                    <p>{Math.round(weatherData.daily.temperature_2m_min[index])}°C</p>
                                 </li>
                             )
                         })}

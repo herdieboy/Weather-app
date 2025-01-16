@@ -1,5 +1,5 @@
 Weather forecast app built in React js
 
 Styled with tailwindcss  
-Built with vite 
+Built with vite  
 HTTP axios 
