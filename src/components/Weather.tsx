@@ -70,7 +70,7 @@ function splitTime(time: string) {
         year: parseInt(year, 10),
         month: parseInt(month, 10),
         day: parseInt(day, 10),
-        weekday: weekdays[new Date(year, month - 1, day).getDay()],
+        weekday: weekdays[new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10)).getDay()],
         hour: parseInt(hour, 10)
     }
 }
