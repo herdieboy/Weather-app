@@ -124,10 +124,10 @@ export default function Weather() {
         <>
             <Geo onGeoData={handleGeoData}/>
 
-            <div className="snap-x snap-mandatory flex flex-row pt-[1rem] overflow-x-scroll">
+            <div className="snap-x snap-mandatory flex flex-row overflow-x-scroll">
                 {weatherData ? (
                     <>
-                    <div className="snap-center w-screen min-w-[100vw] max-w-[100vw] flex flex-col items-center">
+                    <div className="snap-center w-screen min-w-[100vw] max-w-[100vw] mt-[3rem] flex flex-col items-center">
                         <img className="w-[6rem]" src={weatherCodeIcons[weatherData.current.weather_code]}></img>
                         <h1 className="text-[4rem]">{Math.round(weatherData.current.temperature_2m)}°C</h1>
                         <p>{Math.round(weatherData.current.precipitation)}mm</p>
