@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import Geo from './Geo'
+import LocationSelector from './LocationSelector'
+import {splitTime, getDate} from './Helpers'
 
 import drizzle from '../assets/icons/cloud-drizzle.svg'
 import lightning from '../assets/icons/cloud-lightning.svg'
@@ -40,45 +41,11 @@ const weatherCodeIcons: { [key: number]: string } = {
     95: lightning, 96: lightning, 99: lightning
 }
 
-function getDate() {
-    const today = new Date()
-    const startDate = new Date(today)
-    startDate.setDate(today.getDate() + 1)
-    const endDate = new Date(today)
-    endDate.setDate(today.getDate() + 7)
-
-    const formatDate = (date: Date) => {
-        const month = date.getMonth() + 1
-        const year = date.getFullYear()
-        const day = date.getDate()
-        return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`
-    }
-
-    return {
-        start: formatDate(startDate),
-        end: formatDate(endDate)
-    }
-}
-
-function splitTime(time: string) {
-    const [datePart, timePart] = time.split("T")
-    const [year, month, day] = datePart.split("-")
-    const [hour] = timePart.split(":")
-    const weekdays = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
-
-    return {
-        year: parseInt(year, 10),
-        month: parseInt(month, 10),
-        day: parseInt(day, 10),
-        weekday: weekdays[new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10)).getDay()],
-        hour: parseInt(hour, 10)
-    }
-}
-
 export default function Weather() {
     const [weatherData, setWeatherData] = useState<WeatherData | null>(null)
     const [latitude, setLatitude] = useState<number | null>(55.6759)
     const [longitude, setLongitude] = useState<number | null>(12.5655)
+    const todayDay = splitTime(getDate().start + "T00:00").weekday
 
     const fetchData = async () => {
         await axios
@@ -94,7 +61,7 @@ export default function Weather() {
 
     useEffect(() => {
         fetchData()
-    }, [latitude, longitude])
+    }, [])
 
     const handleGeoData = (lat: number, lon: number) => {
         setLatitude(lat)
@@ -122,35 +89,48 @@ export default function Weather() {
     
     return (
         <>
-            <Geo onGeoData={handleGeoData}/>
+            <LocationSelector onGeoData={handleGeoData}/>
 
             <div className="snap-x snap-mandatory overscroll-none flex flex-row overflow-x-scroll">
-                {weatherData ? (
-                    <>
-                    <div className="snap-center w-screen min-w-[100vw] max-w-[100vw] mt-[3rem] flex flex-col items-center">
-                        <img className="w-[6rem]" src={weatherCodeIcons[weatherData.current.weather_code]}></img>
-                        <h1 className="text-[4rem]">{Math.round(weatherData.current.temperature_2m)}°C</h1>
-                        <p>{Math.round(weatherData.current.precipitation)}mm</p>
-                        <p>{Math.round(weatherData.current.wind_speed_10m)}({Math.round(weatherData.current.wind_gusts_10m)})m/s</p>
-                    </div>
-
+                {weatherData ? (<>
                     {Object.entries(groupByDay(weatherData)).map(([weekday, data]) => (
-                        <div key={weekday} className="snap-center w-screen min-w-[calc(100vw)] max-w-[calc(100vw-2rem)] h-full px-[1rem]">
-                            <h2 className="text-[3rem]">{weekday}</h2>
-                            <ul className="flex flex-col gap-[1rem] mt-[1rem] h-[calc(100%-6rem)] overflow-scroll rounded-[1rem] pb-[2rem]">
-                                {data.map((item, index) => (
-                                    <li key={index} className="flex flex-row justify-between gap-4 bg-blue-200 p-[1rem] rounded-[1rem]">
-                                        <p>{splitTime(item.time).hour}</p>
-                                        <img className="w-[2rem]" src={weatherCodeIcons[item.weather_code]} alt="weather icon" />
-                                        <p>{Math.round(item.temperature)}°C</p>
-                                        <p>{Math.round(item.precipitation)}mm</p>
-                                        <p>{Math.round(item.wind_speed)}({Math.round(item.wind_gusts)})m/s</p>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))}
-                    </>
+                        
+                        weekday === todayDay ?
+
+                            <div key={weekday} className="snap-center w-screen min-w-[calc(100vw)] max-w-[calc(100vw-2rem)] h-full px-[1rem]">
+                                <img className="w-[6rem] m-auto" src={weatherCodeIcons[weatherData.current.weather_code]}></img>
+                                <h1 className="text-[4rem]">{Math.round(weatherData.current.temperature_2m)}°C</h1>
+                                <p>{Math.round(weatherData.current.precipitation)}mm</p>
+                                <p>{Math.round(weatherData.current.wind_speed_10m)}({Math.round(weatherData.current.wind_gusts_10m)})m/s</p>
+
+                                <ul className="flex flex-col gap-[1rem] mt-[1rem] h-[calc(100%-6rem)] overflow-scroll rounded-[1rem] pb-[2rem]">
+                                    {data.map((item, index) => (
+                                        <li key={index} className="flex flex-row justify-between gap-4 bg-blue-200 p-[1rem] rounded-[1rem]">
+                                            <p>{splitTime(item.time).hour}</p>
+                                            <img className="w-[2rem]" src={weatherCodeIcons[item.weather_code]} alt="weather icon" />
+                                            <p>{Math.round(item.temperature)}°C</p>
+                                            <p>{Math.round(item.precipitation)}mm</p>
+                                            <p>{Math.round(item.wind_speed)}({Math.round(item.wind_gusts)})m/s</p>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        :
+                            <div key={weekday} className="snap-center w-screen min-w-[calc(100vw)] max-w-[calc(100vw-2rem)] h-full px-[1rem]">
+                                <h2 className="text-[3rem]">{weekday}</h2>
+                                <ul className="flex flex-col gap-[1rem] mt-[1rem] h-[calc(100%-6rem)] overflow-scroll rounded-[1rem] pb-[2rem]">
+                                    {data.map((item, index) => (
+                                        <li key={index} className="flex flex-row justify-between gap-4 bg-blue-200 p-[1rem] rounded-[1rem]">
+                                            <p>{splitTime(item.time).hour}</p>
+                                            <img className="w-[2rem]" src={weatherCodeIcons[item.weather_code]} alt="weather icon" />
+                                            <p>{Math.round(item.temperature)}°C</p>
+                                            <p>{Math.round(item.precipitation)}mm</p>
+                                            <p>{Math.round(item.wind_speed)}({Math.round(item.wind_gusts)})m/s</p>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                    ))}</>
                 ) : (
                     <p>Loading...</p>
                 )}

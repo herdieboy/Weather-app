@@ -14,7 +14,7 @@ interface GeoProps {
     onGeoData: (latitude: number, longitude: number) => void;
 }
 
-export default function Geo({ onGeoData} : GeoProps) {
+export default function LocationSelector({ onGeoData} : GeoProps) {
     const [geoData, setGeoData] = useState<GeoData | null>(null)
     const [city, setCity] = useState<string>('Copenhagen')
     const [error, setError] = useState<string | null>(null)
