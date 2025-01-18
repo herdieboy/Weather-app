@@ -91,21 +91,21 @@ export default function Weather() {
         <>
             <LocationSelector onGeoData={handleGeoData}/>
 
-            <div className="snap-x snap-mandatory overscroll-none flex flex-row overflow-x-scroll">
+            <div className="snap-x snap-mandatory overscroll-none flex flex-row md:flex-col overflow-scroll">
                 {weatherData ? (<>
                     {Object.entries(groupByDay(weatherData)).map(([weekday, data]) => (
                         
                         weekday === todayDay ?
 
-                            <div key={weekday} className="snap-center w-screen min-w-[calc(100vw)] max-w-[calc(100vw-2rem)] h-full px-[1rem]">
+                            <div key={weekday} className="snap-center w-screen min-w-[calc(100vw)] max-w-[calc(100vw-2rem)] h-full px-[1rem] overflow-scroll md:overflow-auto">
                                 <img className="w-[6rem] m-auto" src={weatherCodeIcons[weatherData.current.weather_code]}></img>
                                 <h1 className="text-[4rem]">{Math.round(weatherData.current.temperature_2m)}°C</h1>
                                 <p>{Math.round(weatherData.current.precipitation)}mm</p>
                                 <p>{Math.round(weatherData.current.wind_speed_10m)}({Math.round(weatherData.current.wind_gusts_10m)})m/s</p>
 
-                                <ul className="flex flex-col gap-[1rem] mt-[1rem] h-[calc(100%-6rem)] overflow-scroll rounded-[1rem] pb-[2rem]">
+                                <ul className="flex flex-col md:flex-row gap-[1rem] mt-[1rem] rounded-[1rem] pb-[2rem] md:overflow-scroll">
                                     {data.map((item, index) => (
-                                        <li key={index} className="flex flex-row justify-between gap-4 bg-blue-200 p-[1rem] rounded-[1rem]">
+                                        <li key={index} className="flex flex-row md:flex-col justify-between items-center gap-4 bg-[#1b283c] p-[1rem] rounded-[1rem]">
                                             <p>{splitTime(item.time).hour}</p>
                                             <img className="w-[2rem]" src={weatherCodeIcons[item.weather_code]} alt="weather icon" />
                                             <p>{Math.round(item.temperature)}°C</p>
@@ -116,11 +116,11 @@ export default function Weather() {
                                 </ul>
                             </div>
                         :
-                            <div key={weekday} className="snap-center w-screen min-w-[calc(100vw)] max-w-[calc(100vw-2rem)] h-full px-[1rem]">
+                            <div key={weekday} className="snap-center w-screen min-w-[calc(100vw)] max-w-[calc(100vw-2rem)] h-full px-[1rem] overflow-scroll md:overflow-auto">
                                 <h2 className="text-[3rem]">{weekday}</h2>
-                                <ul className="flex flex-col gap-[1rem] mt-[1rem] h-[calc(100%-6rem)] overflow-scroll rounded-[1rem] pb-[2rem]">
+                                <ul className="flex flex-col md:flex-row gap-[1rem] mt-[1rem] rounded-[1rem] pb-[2rem] md:overflow-scroll">
                                     {data.map((item, index) => (
-                                        <li key={index} className="flex flex-row justify-between gap-4 bg-blue-200 p-[1rem] rounded-[1rem]">
+                                        <li key={index} className="flex flex-row md:flex-col justify-between items-center gap-4 bg-[#1b283c] p-[1rem] rounded-[1rem]">
                                             <p>{splitTime(item.time).hour}</p>
                                             <img className="w-[2rem]" src={weatherCodeIcons[item.weather_code]} alt="weather icon" />
                                             <p>{Math.round(item.temperature)}°C</p>
