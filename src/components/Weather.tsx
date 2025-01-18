@@ -124,7 +124,7 @@ export default function Weather() {
         <>
             <Geo onGeoData={handleGeoData}/>
 
-            <div className="snap-x snap-mandatory flex flex-row overflow-x-scroll">
+            <div className="snap-x snap-mandatory overscroll-none flex flex-row overflow-x-scroll">
                 {weatherData ? (
                     <>
                     <div className="snap-center w-screen min-w-[100vw] max-w-[100vw] mt-[3rem] flex flex-col items-center">
