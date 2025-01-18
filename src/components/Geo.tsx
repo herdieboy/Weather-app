@@ -43,7 +43,7 @@ export default function Geo({ onGeoData} : GeoProps) {
     }, [])
 
     return (
-        <div className="w-full flex flex-col">
+        <div className="w-full flex flex-col p-[1rem]">
             <input className="border rounded-full px-[1rem] py-[0.25rem] mb-[0.5rem] bg-transparent" type="text" value={city} onChange={(event) => setCity(event.target.value)} />
             <button className="border rounded-full px-[1rem] py-[0.25rem] mb-[1rem] ml-[-1px]" onClick={fetchData}>Search</button>
 
